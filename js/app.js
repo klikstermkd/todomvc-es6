@@ -1,4 +1,4 @@
-import {Todos} from './controllers/todos';
+import Todos from './controllers/todos';
 
 let app = new Todos();
 
