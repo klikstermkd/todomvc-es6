@@ -1,3 +1,3 @@
-# Vanilla ES6 (ES2015) • [TodoMVC](http://todomvc.com)
+# Vanilla ES6 • [TodoMVC](http://todomvc.com)
 
-> TodoMVC implementation in ES6 (ES2015).
+> TodoMVC implementation in Vanilla ES6.

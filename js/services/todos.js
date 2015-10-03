@@ -1,17 +1,26 @@
 import Todo from '../model/todo';
 import Dom from '../utilities/dom';
+import $ from '../utilities/domSelector';
 import KEYBOARD_KEYS from '../utilities/keyboardKeys';
 
-export class Todos {
+const STORAGE_KEY = 'todos-es6';
+
+export default class Todos {
 
 	constructor() {
 		this.items = [];
-		this.$ = document.querySelectorAll.bind(document);
-		this.itemsContainer = Array.from(this.$('.todo-list'))[0];
-		this.toggleAllCheck = Array.from(this.$('.toggle-all'))[0];
-		this.mainSection = Array.from(this.$('.main'))[0];
-		this.footerSection = Array.from(this.$('.footer'))[0];
-		this.clearCompleted = Array.from(this.$('.clear-completed'))[0];
+
+		this.itemsContainer = $('.todo-list');
+		this.mainSection = $('.main');
+		this.footerSection = $('.footer');
+		this.toggleAllCheck = $('.toggle-all');
+		this.clearCompleted = $('.clear-completed');
+
+		let localItems = window.localStorage.getItem(STORAGE_KEY);
+
+		if (localItems) {
+			this.items = JSON.parse(localItems);
+		}
 	}
 
 	getItems() {
@@ -36,6 +45,7 @@ export class Todos {
 
 		this.items.push(todo);
 		this.itemsContainer.appendChild(itemContainer);
+		this._updateLocalStorage();
 
 	}
 
@@ -70,6 +80,8 @@ export class Todos {
 				itemsCompletedCounter++;
 			}
 		}
+
+		this._updateLocalStorage();
 
 		if (itemsLength === itemsCompletedCounter) {
 			this.toggleAllCheck.checked = true;
@@ -108,6 +120,8 @@ export class Todos {
 			}
 		}
 
+		this._updateLocalStorage();
+
 		for (let item of this.items) {
 			if (item.completed) {
 				itemsCompletedCounter++;
@@ -129,7 +143,6 @@ export class Todos {
 
 		let itemContainer = target.parentNode;
 		let originalValue = target.textContent;
-		let that = this;
 		let itemEditContainer, inputValue;
 
 		while (itemContainer.tagName !== 'LI') {
@@ -147,21 +160,17 @@ export class Todos {
 		itemEditContainer.focus();
 		this._setCaretEnd(itemEditContainer);
 
-		Dom(itemEditContainer).on('keydown', _updateCallback);
-		Dom(itemEditContainer).on('blur', _updateCallback);
-
-		function _updateCallback(event) {
+		let _updateCallback = event => {
 			inputValue = itemEditContainer.value.trim();
 
 			if (event.keyCode === KEYBOARD_KEYS.ENTER || event.type === 'blur') {
-				console.log(event.keyCode);
 				let itemContainerId = Number.parseInt(itemContainer.getAttribute('data-id'), 10);
 
 				if (inputValue !== '') {
 					let id = new Date().getTime();
 					let title = inputValue;
 
-					for (let item of that.items) {
+					for (let item of this.items) {
 						if (item.id === itemContainerId) {
 							item.title = inputValue;
 							break;
@@ -171,28 +180,30 @@ export class Todos {
 					target.textContent = inputValue;
 					itemContainer.classList.remove('editing');
 				} else {
-					let i = that.items.length;
+					let i = this.items.length;
 
 					while (i--) {
-						if (that.items[i].id === itemContainerId) {
-							let itemToRemove = that.itemsContainer.children[i];
+						if (this.items[i].id === itemContainerId) {
+							let itemToRemove = this.itemsContainer.children[i];
 
-							that.items.splice(i, 1);
-							that.itemsContainer.removeChild(itemToRemove);
+							this.items.splice(i, 1);
+							this.itemsContainer.removeChild(itemToRemove);
 							break;
 						}
 					}
 				}
 
+				this._updateLocalStorage();
+
 				Dom(itemEditContainer).off('keydown', _updateCallback);
 				Dom(itemEditContainer).off('blur', _updateCallback);
 
-				that._updateActiveItemsCounter();
+				this._updateActiveItemsCounter();
 
-				if (that.getItems().length === 0) {
-					Dom().hideSections(that.mainSection, that.footerSection);
-					that.toggleAllCheck.checked = false;
-					Dom(that.clearCompleted).hide();
+				if (this.getItems().length === 0) {
+					Dom().hideSections(this.mainSection, this.footerSection);
+					this.toggleAllCheck.checked = false;
+					Dom(this.clearCompleted).hide();
 				}
 
 			} else if (event.keyCode === KEYBOARD_KEYS.ESC) {
@@ -203,8 +214,10 @@ export class Todos {
 				Dom(itemEditContainer).off('blur', _updateCallback);
 			}
 
-		}
+		};
 
+		Dom(itemEditContainer).on('keydown', _updateCallback);
+		Dom(itemEditContainer).on('blur', _updateCallback);
 	}
 
 	_setCaretEnd(txt) {
@@ -223,7 +236,7 @@ export class Todos {
 
 	_updateActiveItemsCounter() {
 
-		let itemsCount = Array.from(this.$('.todo-count'))[0];
+		let itemsCount = $('.todo-count');
 		let activeItems = 0;
 
 		for (let item of this.getItems()) {
@@ -238,6 +251,10 @@ export class Todos {
 			itemsCount.innerHTML = `<strong>${activeItems}</strong> items left`;
 		}
 
+	}
+
+	_updateLocalStorage() {
+		window.localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
 	}
 
 }
