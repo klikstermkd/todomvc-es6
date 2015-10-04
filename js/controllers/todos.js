@@ -154,6 +154,7 @@ export default class Todos {
 
 			if (target.tagName === 'LABEL') {
 				this.todosService.updateTitle(target);
+				// TODO: Filter the list after the action occurs.
 				// this._filterList(this.currentFilter);
 			}
 
