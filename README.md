@@ -13,7 +13,7 @@ To install it locally on your machine do the following:
 
 If you want to make some changes in the code, run `webpack -w` so that the code will automatically be transpiled to ES5 and bundled in a file called `bundle.js`, everytime you save any of the files in the `js` directory.
 
-Webpack also crates a `bundle.js.map` file so that if an error occurs you can know in which file and line number the error occured.
+Webpack also creates a `bundle.js.map` file so that if an error occurs you can know in which file and line number the error occured.
 
 List of ES6 features used in this app:
 
@@ -21,7 +21,8 @@ List of ES6 features used in this app:
 * Classes
 * Promises
 * Arrow functions
-* Template literals
+* Template literals with interpolation
+* Destructuring
 * Default parameters
 * Rest parameters
 * Object literal shorthands
