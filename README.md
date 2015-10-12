@@ -19,10 +19,12 @@ List of ES6 features used in this app:
 
 * Modules
 * Classes
+* Promises
 * Arrow functions
 * Template literals
 * Default parameters
-* Rest
+* Rest parameters
+* Object literal shorthands
 * Let, const
 * for..of
 
