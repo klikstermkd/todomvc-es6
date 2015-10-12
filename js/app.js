@@ -1,5 +1,5 @@
-import Todos from './controllers/todos';
+import Controller from './controller';
 
-let app = new Todos();
+let todos = new Controller();
 
-app.init();
+todos.init();
