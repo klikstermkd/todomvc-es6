@@ -17,7 +17,7 @@ const KEYBOARD_KEYS = {
  */
 export default class View {
 
-	constructor() {
+    constructor() {
 
         this.itemsContainer = $('.todo-list');
         this.mainSection = $('.main');
@@ -25,7 +25,7 @@ export default class View {
         this.toggleAllCheck = $('.toggle-all');
         this.clearCompleted = $('.clear-completed');
 
-	}
+    }
 
     /**
      * Render the view based on a command.
@@ -34,7 +34,7 @@ export default class View {
      * @param  {Null|Object} data
      * @public
      */
-	render(command, data) {
+    render(command, data) {
 
         const ALLOWED_COMMANDS = 'list|insert|toggle|toggleAll|remove|removeCompleted|edit|save|menu|counter';
 
@@ -264,7 +264,7 @@ export default class View {
 
         }
 
-	}
+    }
 
     /**
      * Set up event listener based on a command.

@@ -63,7 +63,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	    value: true
 	});
 	
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -96,163 +96,163 @@
 	 */
 	
 	var Controller = (function () {
-		function Controller() {
-			_classCallCheck(this, Controller);
+	    function Controller() {
+	        _classCallCheck(this, Controller);
 	
-			this.model = new _model2['default']();
-			this.view = new _view2['default']();
-		}
+	        this.model = new _model2['default']();
+	        this.view = new _view2['default']();
+	    }
 	
-		/**
-	  * Initialize the app to load the initial view and listen to hash changes.
-	  * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	  * @public
-	  */
+	    /**
+	     * Initialize the app to load the initial view and listen to hash changes.
+	     * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	     * @public
+	     */
 	
-		_createClass(Controller, [{
-			key: 'init',
-			value: function init() {
-				var _this = this;
+	    _createClass(Controller, [{
+	        key: 'init',
+	        value: function init() {
+	            var _this = this;
 	
-				var findView = function findView(event) {
-					var currentView = 'all';
+	            var findView = function findView(event) {
+	                var currentView = 'all';
 	
-					if (window.location.hash) {
-						currentView = window.location.hash.substr(2);
-					}
+	                if (window.location.hash) {
+	                    currentView = window.location.hash.substr(2);
+	                }
 	
-					_this._setView(currentView);
-				};
+	                _this._setView(currentView);
+	            };
 	
-				(0, _helpers.$on)('load', window, findView);
-				(0, _helpers.$on)('hashchange', window, findView);
+	            (0, _helpers.$on)('load', window, findView);
+	            (0, _helpers.$on)('hashchange', window, findView);
 	
-				this._initListeners();
-			}
+	            this._initListeners();
+	        }
 	
-			/**
-	   * Set and render the current active view.
-	   * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	   * @param {String} [view=all]
-	   * @private
-	   */
-		}, {
-			key: '_setView',
-			value: function _setView() {
-				var _this2 = this;
+	        /**
+	         * Set and render the current active view.
+	         * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	         * @param {String} [view=all]
+	         * @private
+	         */
+	    }, {
+	        key: '_setView',
+	        value: function _setView() {
+	            var _this2 = this;
 	
-				var view = arguments.length <= 0 || arguments[0] === undefined ? 'all' : arguments[0];
+	            var view = arguments.length <= 0 || arguments[0] === undefined ? 'all' : arguments[0];
 	
-				if (view && ALLOWED_VIEWS.includes(view)) {
+	            if (view && ALLOWED_VIEWS.includes(view)) {
 	
-					this.model.findAll().then(function (data) {
-						_this2.view.render('list', { view: view, data: data });
-						_this2.view.render('menu', { view: view });
-						_this2.activeView = view;
-						_this2._updateList();
-					})['catch'](function (error) {
-						console.error(error);
-					});
-				} else {
-					window.location.hash = '#/';
-					this._setView('all');
-				}
-			}
+	                this.model.findAll().then(function (data) {
+	                    _this2.view.render('list', { view: view, data: data });
+	                    _this2.view.render('menu', { view: view });
+	                    _this2.activeView = view;
+	                    _this2._updateList();
+	                })['catch'](function (error) {
+	                    console.error(error);
+	                });
+	            } else {
+	                window.location.hash = '#/';
+	                this._setView('all');
+	            }
+	        }
 	
-			/**
-	   * Initialize the listeners and its appropriate handlers.
-	   * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	   * @private
-	   */
-		}, {
-			key: '_initListeners',
-			value: function _initListeners() {
-				var _this3 = this;
+	        /**
+	         * Initialize the listeners and its appropriate handlers.
+	         * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	         * @private
+	         */
+	    }, {
+	        key: '_initListeners',
+	        value: function _initListeners() {
+	            var _this3 = this;
 	
-				this.view.on('insert', function (title) {
-					_this3.model.create(title).then(function (item) {
-						_this3.view.render('insert', { item: item });
-						_this3._updateList();
-					});
-				});
+	            this.view.on('insert', function (title) {
+	                _this3.model.create(title).then(function (item) {
+	                    _this3.view.render('insert', { item: item });
+	                    _this3._updateList();
+	                });
+	            });
 	
-				this.view.on('toggle', function (id, completed) {
-					_this3.model.update(id, { key: 'completed', value: completed }).then(function (item) {
-						_this3.view.render('toggle', { item: item });
-						_this3._updateList();
-					})['catch'](function (error) {
-						console.log(error);
-					});
-				});
+	            this.view.on('toggle', function (id, completed) {
+	                _this3.model.update(id, { key: 'completed', value: completed }).then(function (item) {
+	                    _this3.view.render('toggle', { item: item });
+	                    _this3._updateList();
+	                })['catch'](function (error) {
+	                    console.log(error);
+	                });
+	            });
 	
-				this.view.on('remove', function (id) {
-					_this3.model.remove(id).then(function () {
-						_this3.view.render('remove', { id: id });
-						_this3._updateList();
-					})['catch'](function (error) {
-						console.log(error);
-					});
-				});
+	            this.view.on('remove', function (id) {
+	                _this3.model.remove(id).then(function () {
+	                    _this3.view.render('remove', { id: id });
+	                    _this3._updateList();
+	                })['catch'](function (error) {
+	                    console.log(error);
+	                });
+	            });
 	
-				this.view.on('edit', function (id) {
-					_this3.view.render('edit', { id: id });
+	            this.view.on('edit', function (id) {
+	                _this3.view.render('edit', { id: id });
 	
-					_this3.view.on('save', function (action, id, title) {
-						if (action === 'save') {
-							_this3.model.update(id, { key: 'title', value: title }).then(function (item) {
-								_this3.view.render('save', { item: item });
-								_this3._updateList();
-							})['catch'](function (error) {
-								console.log(error);
-							});
-						} else if (action === 'remove') {
-							_this3.model.remove(id).then(function () {
-								_this3.view.render('remove', { id: id });
-								_this3._updateList();
-							})['catch'](function (error) {
-								console.log(error);
-							});
-						}
-					});
-				});
+	                _this3.view.on('save', function (action, id, title) {
+	                    if (action === 'save') {
+	                        _this3.model.update(id, { key: 'title', value: title }).then(function (item) {
+	                            _this3.view.render('save', { item: item });
+	                            _this3._updateList();
+	                        })['catch'](function (error) {
+	                            console.log(error);
+	                        });
+	                    } else if (action === 'remove') {
+	                        _this3.model.remove(id).then(function () {
+	                            _this3.view.render('remove', { id: id });
+	                            _this3._updateList();
+	                        })['catch'](function (error) {
+	                            console.log(error);
+	                        });
+	                    }
+	                });
+	            });
 	
-				this.view.on('toggleAll', function (completed) {
-					_this3.model.update(null, { key: 'completed', value: completed }).then(function () {
-						_this3.view.render('toggleAll', { completed: completed });
-						_this3._updateList();
-					});
-				});
+	            this.view.on('toggleAll', function (completed) {
+	                _this3.model.update(null, { key: 'completed', value: completed }).then(function () {
+	                    _this3.view.render('toggleAll', { completed: completed });
+	                    _this3._updateList();
+	                });
+	            });
 	
-				this.view.on('removeCompleted', function () {
-					_this3.model.remove().then(function () {
-						_this3.view.render('removeCompleted');
-						_this3._updateList();
-					});
-				});
-			}
+	            this.view.on('removeCompleted', function () {
+	                _this3.model.remove().then(function () {
+	                    _this3.view.render('removeCompleted');
+	                    _this3._updateList();
+	                });
+	            });
+	        }
 	
-			/**
-	   * Rerender the list after an action occurs.
-	   * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	   * @private
-	   */
-		}, {
-			key: '_updateList',
-			value: function _updateList() {
-				var _this4 = this;
+	        /**
+	         * Rerender the list after an action occurs.
+	         * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	         * @private
+	         */
+	    }, {
+	        key: '_updateList',
+	        value: function _updateList() {
+	            var _this4 = this;
 	
-				var view = this.activeView;
+	            var view = this.activeView;
 	
-				this.model.findAll().then(function (data) {
-					_this4.view.render('list', { view: view, data: data });
-					_this4.view.render('counter', { data: data });
-				})['catch'](function (error) {
-					console.error(error);
-				});
-			}
-		}]);
+	            this.model.findAll().then(function (data) {
+	                _this4.view.render('list', { view: view, data: data });
+	                _this4.view.render('counter', { data: data });
+	            })['catch'](function (error) {
+	                console.error(error);
+	            });
+	        }
+	    }]);
 	
-		return Controller;
+	    return Controller;
 	})();
 	
 	exports['default'] = Controller;
@@ -837,7 +837,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	    value: true
 	});
 	
 	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
@@ -847,188 +847,188 @@
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
 	var Model = (function () {
-		function Model() {
-			_classCallCheck(this, Model);
+	    function Model() {
+	        _classCallCheck(this, Model);
 	
-			this.data = {
-				todos: []
-			};
+	        this.data = {
+	            todos: []
+	        };
 	
-			var storage = window.localStorage.getItem('todos-es6');
+	        var storage = window.localStorage.getItem('todos-es6');
 	
-			if (storage) {
-				this.data.todos = JSON.parse(storage);
-			}
-		}
+	        if (storage) {
+	            this.data.todos = JSON.parse(storage);
+	        }
+	    }
 	
-		/**
-	  * Find all stored todos.
-	  * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	  * @return {Promise} promise
-	  * @public
-	  */
+	    /**
+	     * Find all stored todos.
+	     * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	     * @return {Promise} promise
+	     * @public
+	     */
 	
-		_createClass(Model, [{
-			key: 'findAll',
-			value: function findAll() {
-				var _this = this;
+	    _createClass(Model, [{
+	        key: 'findAll',
+	        value: function findAll() {
+	            var _this = this;
 	
-				var promise = new Promise(function (resolve, reject) {
-					if (_this.data.todos) {
-						resolve(_this.data.todos);
-					} else {
-						reject('No todos found.');
-					}
-				});
+	            var promise = new Promise(function (resolve, reject) {
+	                if (_this.data.todos) {
+	                    resolve(_this.data.todos);
+	                } else {
+	                    reject('No todos found.');
+	                }
+	            });
 	
-				return promise;
-			}
+	            return promise;
+	        }
 	
-			/**
-	   * Create a todo in the storage.
-	   * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	   * @param  {String} title
-	   * @return {Promise} promise
-	   * @public
-	   */
-		}, {
-			key: 'create',
-			value: function create(title) {
-				var _this2 = this;
+	        /**
+	         * Create a todo in the storage.
+	         * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	         * @param  {String} title
+	         * @return {Promise} promise
+	         * @public
+	         */
+	    }, {
+	        key: 'create',
+	        value: function create(title) {
+	            var _this2 = this;
 	
-				var promise = new Promise(function (resolve, reject) {
-					var id = new Date().getTime().toString();
-					var item = { id: id, title: title, completed: false };
-					_this2.data.todos.push(item);
-					_this2._updateLocalStorage();
-					resolve(item);
-				});
+	            var promise = new Promise(function (resolve, reject) {
+	                var id = new Date().getTime().toString();
+	                var item = { id: id, title: title, completed: false };
+	                _this2.data.todos.push(item);
+	                _this2._updateLocalStorage();
+	                resolve(item);
+	            });
 	
-				return promise;
-			}
+	            return promise;
+	        }
 	
-			/**
-	   * Update the storage based on the specified ids.
-	   * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	   * @param  {String|Array} id
-	   * @param  {Object} data - The data to update.
-	   * @return {Promise} promise
-	   */
-		}, {
-			key: 'update',
-			value: function update(id, data) {
-				var _this3 = this;
+	        /**
+	         * Update the storage based on the specified ids.
+	         * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	         * @param  {String|Array} id
+	         * @param  {Object} data - The data to update.
+	         * @return {Promise} promise
+	         */
+	    }, {
+	        key: 'update',
+	        value: function update(id, data) {
+	            var _this3 = this;
 	
-				var promise = new Promise(function (resolve, reject) {
-					if (id) {
-						var items = _this3.data.todos.filter(function (item) {
-							if (item.id === id) {
-								item[data.key] = data.value;
-								return true;
-							}
-						});
+	            var promise = new Promise(function (resolve, reject) {
+	                if (id) {
+	                    var items = _this3.data.todos.filter(function (item) {
+	                        if (item.id === id) {
+	                            item[data.key] = data.value;
+	                            return true;
+	                        }
+	                    });
 	
-						if (items.length === 1) {
-							var _items = _slicedToArray(items, 1);
+	                    if (items.length === 1) {
+	                        var _items = _slicedToArray(items, 1);
 	
-							var first = _items[0];
+	                        var first = _items[0];
 	
-							_this3._updateLocalStorage();
-							resolve(first);
-						} else {
-							reject('Todo not found.');
-						}
-					} else {
-						var _iteratorNormalCompletion = true;
-						var _didIteratorError = false;
-						var _iteratorError = undefined;
+	                        _this3._updateLocalStorage();
+	                        resolve(first);
+	                    } else {
+	                        reject('Todo not found.');
+	                    }
+	                } else {
+	                    var _iteratorNormalCompletion = true;
+	                    var _didIteratorError = false;
+	                    var _iteratorError = undefined;
 	
-						try {
-							for (var _iterator = _this3.data.todos[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-								var item = _step.value;
+	                    try {
+	                        for (var _iterator = _this3.data.todos[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                            var item = _step.value;
 	
-								item.completed = data.value;
-							}
-						} catch (err) {
-							_didIteratorError = true;
-							_iteratorError = err;
-						} finally {
-							try {
-								if (!_iteratorNormalCompletion && _iterator['return']) {
-									_iterator['return']();
-								}
-							} finally {
-								if (_didIteratorError) {
-									throw _iteratorError;
-								}
-							}
-						}
+	                            item.completed = data.value;
+	                        }
+	                    } catch (err) {
+	                        _didIteratorError = true;
+	                        _iteratorError = err;
+	                    } finally {
+	                        try {
+	                            if (!_iteratorNormalCompletion && _iterator['return']) {
+	                                _iterator['return']();
+	                            }
+	                        } finally {
+	                            if (_didIteratorError) {
+	                                throw _iteratorError;
+	                            }
+	                        }
+	                    }
 	
-						_this3._updateLocalStorage();
-						resolve();
-					}
-				});
+	                    _this3._updateLocalStorage();
+	                    resolve();
+	                }
+	            });
 	
-				return promise;
-			}
+	            return promise;
+	        }
 	
-			/**
-	   * Remove a todo from the storage.
-	   * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	   * @param {String} id
-	   * @return {Promise} promise
-	   * @public
-	   */
-		}, {
-			key: 'remove',
-			value: function remove(id) {
-				var _this4 = this;
+	        /**
+	         * Remove a todo from the storage.
+	         * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	         * @param {String} id
+	         * @return {Promise} promise
+	         * @public
+	         */
+	    }, {
+	        key: 'remove',
+	        value: function remove(id) {
+	            var _this4 = this;
 	
-				var promise = new Promise(function (resolve, reject) {
-					if (id) {
-						var items = _this4.data.todos.filter(function (item, i) {
-							if (item.id === id) {
-								_this4.data.todos.splice(i, 1);
-								return true;
-							}
-						});
+	            var promise = new Promise(function (resolve, reject) {
+	                if (id) {
+	                    var items = _this4.data.todos.filter(function (item, i) {
+	                        if (item.id === id) {
+	                            _this4.data.todos.splice(i, 1);
+	                            return true;
+	                        }
+	                    });
 	
-						if (items.length === 1) {
-							_this4._updateLocalStorage();
-							resolve();
-						} else {
-							reject('Todo not found.');
-						}
-					} else {
-						var i = _this4.data.todos.length;
+	                    if (items.length === 1) {
+	                        _this4._updateLocalStorage();
+	                        resolve();
+	                    } else {
+	                        reject('Todo not found.');
+	                    }
+	                } else {
+	                    var i = _this4.data.todos.length;
 	
-						while (i--) {
-							if (_this4.data.todos[i].completed) {
-								_this4.data.todos.splice(i, 1);
-							}
-						}
+	                    while (i--) {
+	                        if (_this4.data.todos[i].completed) {
+	                            _this4.data.todos.splice(i, 1);
+	                        }
+	                    }
 	
-						_this4._updateLocalStorage();
-						resolve();
-					}
-				});
+	                    _this4._updateLocalStorage();
+	                    resolve();
+	                }
+	            });
 	
-				return promise;
-			}
+	            return promise;
+	        }
 	
-			/**
-	   * Update the local storage.
-	   * @author Aleksandar Jovanov <ace92bt@gmail.com>
-	   * @private
-	   */
-		}, {
-			key: '_updateLocalStorage',
-			value: function _updateLocalStorage() {
-				window.localStorage.setItem('todos-es6', JSON.stringify(this.data.todos));
-			}
-		}]);
+	        /**
+	         * Update the local storage.
+	         * @author Aleksandar Jovanov <ace92bt@gmail.com>
+	         * @private
+	         */
+	    }, {
+	        key: '_updateLocalStorage',
+	        value: function _updateLocalStorage() {
+	            window.localStorage.setItem('todos-es6', JSON.stringify(this.data.todos));
+	        }
+	    }]);
 	
-		return Model;
+	    return Model;
 	})();
 	
 	exports['default'] = Model;

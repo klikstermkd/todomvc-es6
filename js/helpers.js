@@ -6,7 +6,7 @@
  * @public
  */
 let $ = selector => {
-	return document.querySelector(selector);
+    return document.querySelector(selector);
 };
 
 /**
@@ -18,7 +18,7 @@ let $ = selector => {
  * @public
  */
 let $on = (event, element, callback) => {
-	element.addEventListener(event, callback);
+    element.addEventListener(event, callback);
 };
 
 /**
